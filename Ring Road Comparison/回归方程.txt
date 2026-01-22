@@ -1,0 +1,18 @@
+回归模型:
+ln(OD_ij) = β0 + β1 × ln(i_count) + β2 × ln(j_count+1) + β3 × ln(POP_j) + β4 × BORDER + β5 × DIS_ij + β6 × Ring_3 + β7 × Ring_4 + β8 × Ring_5 + ε
+
+估计的回归方程:
+ln(OD_ij) = 1.4054 + 0.0065*ln(i_count) + -0.0027*ln(j_count+1) + 0.0236*ln(POP_j) + -0.0501*BORDER + -0.4072*DIS_ij + 0.0253*Ring_3 + 0.0323*Ring_4 + -0.0711*Ring_5
+
+变量说明:
+ln(OD_ij): OD流量的自然对数
+const (β0): 常数项/截距项
+ln_i_count (β1): ln(i_count)
+ln_j_count_plus1 (β2): ln(j_count+1)
+ln_POP_j (β3): ln(POP_j)
+BORDER (β4): 边界效应
+DIS_ij (β5): i-j距离
+Ring_3 (β6): 三环虚拟变量（相对于二环基准组）
+Ring_4 (β7): 四环虚拟变量（相对于二环基准组）
+Ring_5 (β8): 五环虚拟变量（相对于二环基准组）
+ε: 随机误差项
