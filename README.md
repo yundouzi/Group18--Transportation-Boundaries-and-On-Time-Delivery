@@ -1,61 +1,65 @@
 
-# GIS 大作业：城市扩张与地表覆盖变化分析
+# Group18: 识别、量化与比较交通边界对即时配送的阻碍效应——以北京市为例
 
-本作业利用 GIS 技术对 Shanghai 市及周边地区的地表覆盖数据进行时序分析，研究城市扩张对地表覆盖的影响。核心任务包括数据预处理、分类、变化检测、统计分析以及可视化呈现。项目结构设计注重模块化，便于同学们复用和扩展。
+## 📚 项目简介
 
-**数据来源**：公开 GIS/遥感数据源（课程要求数据集或公开影像数据），并结合现有研究方法进行分析与可视化。
+本项目深入探讨了北京市不同类型的交通边界（如二环、三环、四环、五环、快速路、河流等）对即时配送服务效率的影响。我们旨在通过地理空间分析和统计建模，识别、量化并比较这些交通边界所带来的配送阻碍效应，特别关注不同环线区域内、区域间以及不同方向上的效应差异。研究结果将为优化即时配送网络、提升城市物流效率以及支撑智慧城市规划提供数据驱动的洞察和决策依据。
 
-**研究内容要点**（与 PPT 对应的核心方向）：
-- 地表覆盖分类与变化检测
-- 城市扩张趋势分析
-- 各类地表覆盖的时序统计与可视化
-- 空间分异性与驱动因素初步探讨（如人口、交通、土地利用政策等）
+**研究区域**: 北京市
+
+**数据来源**:
+- 即时配送平台订单数据（脱敏后）
+- 交通路网数据（OpenStreetMap 等）
+- 城市POI数据
+- 行政区划与自然地理边界数据
+- 地理编码服务
 
 ---
 
 ## 🎯 研究目标
 
-- 通过多时间点的地表覆盖数据，分析城市扩张的时空演化
-- 量化不同年份/区划的地表覆盖变化
-- 评估不同地表覆盖类型的变化速率与驱动因素
-- 提供可复现的分析流程与可视化结果
+- **交通边界识别**: 识别并数字化北京市主要的交通边界，包括各环路、河流、铁路等。
+- **阻碍效应量化**: 开发方法量化不同交通边界对即时配送时间及效率的影响，例如通过模型计算穿过边界的额外时间成本。
+- **空间效应比较**: 比较不同类型交通边界（如二环 vs 三环，环路 vs 河流）以及同一边界不同方向（如由内向外 vs 由外向内）的阻碍效应差异。
+- **驱动因素分析**: 探究影响边界阻碍效应的潜在因素，例如道路设施、路口密度、交通管制等。
+- **优化建议**: 基于量化结果，为即时配送平台和城市规划提供优化策略。
 
 ---
 
 ## 📁 项目结构
 
 ```
-gis_project/
-├── data/                                    # 数据文件
-│   ├── landcover_YYYY.csv                  # 不同时间点的地表覆盖数据（CSV/shapefile 等）
-│   ├── boundary.shp                        # 区域边界（矢量）
-│   └── metadata.md                         # 数据集元数据说明
+traffic_boundary_delivery/
+├── data/                                    # 原始数据与处理后的数据
+│   ├── raw/                                 # 原始订单数据、路网、POI等
+│   ├── processed/                           # 经过清洗、匹配、地理编码后的数据
+│   └── boundaries/                          # 数字化后的交通边界（shp文件等）
 │
 ├── src/                                     # 源代码
-│   ├── preprocessing.py                    # 数据清洗与对齐（时间对齐、坐标系统一等）
-│   ├── classification.py                   # 地表覆盖分类流程（如监督/非监督学习）
-│   ├── change_detection.py                 # 变化检测与转化矩阵计算
-│   └── visualization.py                    # 可视化绘图（时序图、热力图、分布图等）
+│   ├── data_preprocessing.py               # 数据清洗、匹配、地理编码、OD对生成
+│   ├── boundary_identification.py          # 交通边界数字化与拓扑关系构建
+│   ├── impedance_modeling.py               # 配送阻碍效应量化模型（如线性回归、GWR）
+│   ├── spatial_analysis.py                 # 空间统计与方向性分析
+│   └── visualization.py                    # 结果可视化脚本
 │
 ├── figures/                                 # 生成的图表与可视化产出
-│   ├── fig1_change_map.png                 # 时序变化地图
-│   ├── fig2_class_distribution.png         # 分类分布图
-│   ├── fig3_transition_matrix.png          # 转换矩阵热力图
-│   ├── fig4_time_series.png                # 时序趋势图
-│   └── fig5_spatial_distribution.png       # 空间分布图
+│   ├── boundary_maps/                      # 各类交通边界可视化图
+│   ├── impedance_effect_maps/              # 阻碍效应空间分布图
+│   ├── comparison_charts/                  # 阻碍效应比较图表（环线、方向等）
+│   ├── regression_results/                 # 回归模型结果图表
+│   └── report_figures/                     # 报告专用图表
 │
-├── docs/                                    # 文档
-│   ├── analysis_report.md                  # 数据分析报告（摘要、方法、结果、结论）
-│   └── methodology.md                      # 方法学与工作流说明
+├── docs/                                    # 文档与报告
+│   ├── research_report.md                  # 详细研究报告（基于Word文档内容）
+│   └── methodology_appendix.md             # 方法学附录
 │
-├── notebooks/                               # Jupyter 笔记本（可选）
-│   └── exploratory_analysis.ipynb
+├── notebooks/                               # Jupyter 笔记本（可选，用于探索性分析与方法测试）
+│   ├── exploratory_data_analysis.ipynb
+│   └── model_testing.ipynb
 │
 ├── README.md                                # 项目总览（本文件）
 └── requirements.txt                         # 依赖包列表
 ```
-
-> 注：具体的文件名和结构可按你 PPT 的实际内容微调，上述为一个可复用且清晰的模板。
 
 ---
 
@@ -64,137 +68,145 @@ gis_project/
 ### 依赖包
 
 - Python 版本：3.8+
-- pandas>=1.5.0
-- geopandas>=0.10.0
-- numpy>=1.20.0
-- matplotlib>=3.4.0
-- seaborn>=0.11.0
-- scikit-learn>=1.2.0
-- rasterio>=1.2.0（若处理栅格数据）
+- `pandas`
+- `numpy`
+- `scipy`
+- `matplotlib`
+- `seaborn`
+- `scikit-learn` (用于回归分析等)
+- `geopandas` (用于矢量数据处理和空间操作)
+- `shapely` (用于几何操作)
+- `networkx` (用于图论分析，如路径规划模拟)
+- `osmnx` (从OpenStreetMap获取路网数据)
+- `statsmodels` (高级统计模型，如多重线性回归)
+- `folium` 或 `keplergl` (用于交互式地图可视化)
+- `tqdm` (用于进度条显示)
 
-### 安装步骤（推荐虚拟环境）
+### 安装步骤（推荐使用虚拟环境）
 
-1. **克隆或下载仓库**
-   ```bash
-   git clone <your-repo-url>
-   cd gis_project
-   ```
+1.  **克隆或下载仓库**
+    ```bash
+    git clone <your-repo-url>
+    cd traffic_boundary_delivery
+    ```
 
-2. **创建并激活虚拟环境**
-   ```bash
-   # Linux/macOS
-   python -m venv venv
-   source venv/bin/activate
-   
-   # Windows
-   python -m venv venv
-   venv\Scripts\activate
-   ```
+2.  **创建并激活虚拟环境**
+    ```bash
+    # Linux/macOS
+    python -m venv venv
+    source venv/bin/activate
+    
+    # Windows
+    python -m venv venv
+    venv\Scripts\activate
+    ```
 
-3. **安装依赖**
-   ```bash
-   pip install -r requirements.txt
-   ```
+3.  **安装依赖**
+    ```bash
+    pip install -r requirements.txt
+    ```
+    > **注意**：`geopandas` 及其依赖项在某些系统上安装可能较复杂，特别是 `GDAL`。如果遇到问题，请参考官方文档或寻求帮助。在 Windows 上，可能需要从 [Unofficial Windows Binaries for Python Extension Packages](https://www.lfd.uci.edu/~gohlke/pythonlibs/) 下载对应版本的 `.whl` 文件手动安装。
 
 ---
 
 ## 🚀 使用方法
 
-### 1. 数据预处理
+### 1. 数据准备
 
-运行 `preprocessing.py`：对不同时间点的数据进行坐标系统一、分辨率对齐、区域裁切等预处理。
+将原始订单数据、路网、POI 等数据放入 `data/raw/` 目录。根据需要，可能需要手动下载或通过脚本从 API 获取数据。
+
+### 2. 数据预处理
+
+运行 `data_preprocessing.py` 脚本，执行数据清洗、OD对生成、地理编码（如将文本地址转换为经纬度）等操作。
 
 ```bash
 cd src
-python preprocessing.py
+python data_preprocessing.py
 ```
 
-**输入**：原始地表覆盖数据、区域边界等  
-**输出**：对齐后的数据集，存放在 `data/` 或中间产物目录
+**输入**：`data/raw/` 中的原始数据  
+**输出**：处理后的订单数据、OD对等，存储于 `data/processed/`
 
-### 2. 地表覆盖分类
+### 3. 交通边界识别与拓扑构建
 
-运行 `classification.py`：根据数据特点进行监督或非监督分类，得到各时间点的地表覆盖标签。
+运行 `boundary_identification.py` 脚本，数字化北京市的各交通边界（如环路、河流），并建立订单OD对与这些边界之间的拓扑关系（如是否穿越、穿越次数等）。
 
 ```bash
-python classification.py
+python boundary_identification.py
 ```
 
-**输入**：预处理后的栅格/矢量数据  
-**输出**：各时间点的地表覆盖结果（如 CSV/GeoJSON/GeoTIFF）
+**输入**：`data/processed/` 中的OD对，`data/raw/` 或 `data/boundaries/` 中的边界数据  
+**输出**：带有边界穿越信息的OD对数据，存储于 `data/processed/`
 
-### 3. 变化检测
+### 4. 配送阻碍效应量化
 
-运行 `change_detection.py`：计算年度/区划之间的转化矩阵，识别主要变化类型（如建筑用地扩张、水体减少等）。
+运行 `impedance_modeling.py` 脚本，构建统计模型（如多重线性回归）来量化不同交通边界的阻碍效应，分析其对配送时间的影响。
 
 ```bash
-python change_detection.py
+python impedance_modeling.py
 ```
 
-**输入**：各时间点地表覆盖结果  
-**输出**：转化矩阵、变化统计
+**输入**：`data/processed/` 中带有边界信息的OD对数据  
+**输出**：模型结果（系数、R²、P值等），以及效应的量化值。
 
-### 4. 可视化与报告
+### 5. 空间分析与比较
 
-运行 `visualization.py`：生成时序趋势图、分类分布、转化矩阵热力图、变化地图等，并保存至 `figures/`
+运行 `spatial_analysis.py` 脚本，对量化后的阻碍效应进行空间统计分析，比较不同环路、不同方向的效应差异。
+
+```bash
+python spatial_analysis.py
+```
+
+**输入**：`impedance_modeling.py` 的输出结果  
+**输出**：效应差异的统计结果，存储于 `data/processed/` 或直接用于可视化。
+
+### 6. 结果可视化
+
+运行 `visualization.py` 脚本，生成各类分析结果的可视化图表，包括交通边界地图、阻碍效应空间分布图、效应比较柱状图等。
 
 ```bash
 python visualization.py
 ```
 
-**输出**：多张图表，供分析报告使用
-
-### 5. 生成分析报告
-
-将分析要点整理成 `docs/analysis_report.md`，包含方法简介、主要发现与结论。
+**输入**：前述步骤生成的所有分析结果  
+**输出**：高质量图表文件，存储于 `figures/` 目录
 
 ---
 
-## 🗺 主要发现
+## 📊 主要发现
 
-> 请在实际提交中，将以下示例要点替换为你们在作业中得到的具体结论和统计数据。
+> 以下总结基于你提供的Word文档内容，是报告中核心发现的概括。
 
-- 城市扩张与地表覆盖变化的定量趋势
-- 不同时间点的地表覆盖分布特征
-- 主要区域的变化驱动因素（如交通节点、土地使用政策等的初步关联）
-
----
-
-## 📈 可视化图表说明
-
-- **fig1_change_map.png**：各时间点的地表覆盖变化地图，展示扩张区域与缩小区域
-- **fig2_class_distribution.png**：地表覆盖类别在各时间点的分布
-- **fig3_transition_matrix.png**：转化矩阵（来源地表覆盖与目标地表覆盖的转换概率）
-- **fig4_time_series.png**：关键指标（如建筑用地面积、绿地面积等）的时间序列
-- **fig5_spatial_distribution.png**：某一区域的空间分布对比
+- **整体效应**: 北京市交通边界对即时配送时间存在显著的阻碍效应，配送时间在穿越边界时会增加。
+- **环线差异**: 不同环路边界的阻碍效应存在差异，具体量化了二环、三环、四环、五环以及高速公路等边界带来的额外配送时间。
+- **方向性效应**: 同一交通边界，不同穿越方向（如由内向外 vs 由外向内）的阻碍效应可能不同，反映了交通组织和路网连通性的复杂性。
+- **空间异质性**: 边界的阻碍效应在空间上并非均一，可能受道路类型、路口密度、交通流强度、区域功能等因素的影响。
+- **河流边界**: 某些河流边界，由于桥梁数量限制和路网连通性较差，也表现出一定的阻碍效应。
+- **OD距离影响**: 边界阻碍效应的比例或绝对值可能与订单的OD距离相关。
+- **个体订单层面**: 识别出哪些订单由于边界的存在而遭受了显著的配送时间延长。
 
 ---
 
 ## 💡 未来工作
 
-- 引入机器学习用于自动化分类与更高精度的变化检测
-- 增加更多时间点的数据以提升统计显著性
-- 做更细粒度的空间分异性分析（如按区/街道级别）
-- 将分析结果嵌入交互式仪表盘（如 Streamlit/Dash）
+- **高精度边界提取**: 结合更精细的路网数据和交通规则，精确划分交通分区分界。
+- **更复杂的模型**: 引入机器学习模型（如梯度提升树、神经网络）或空间计量模型（如地理加权回归）以捕捉更复杂的非线性关系和空间异质性。
+- **动态交通数据**: 结合实时交通流数据，研究动态交通状况下边界阻碍效应的变化。
+- **微观路段分析**: 深入分析边界上的特定路段和交叉口设计如何影响配送效率。
+- **成本效益分析**: 将时间阻碍转化为经济成本，为配送平台提供更直接的决策依据。
+- **多城市比较**: 将研究拓展至其他城市，进行跨城市比较，探究城市空间结构对物流效率的普适性影响。
 
 ---
 
 ## 👥 团队成员
 
-- 范思琪（哈深-25S156046）
-- 陈妮（哈深-25S156055）
-- 徐静雯（哈深-25S066011）
-- 王骞若（哈深-25S156059）
+- [范思琪] (25S156046)
+- [陈妮] (25S156055)
+- [徐静雯] (25S066011)
+- [王骞若] (25S156059)
 
----
 
 ## 📝 参考文献与数据来源
 
-- 课程材料与公开数据集来源
-- 相关论文或指南
-
----
-
-## 📄 许可证
-
-此项目仅供学习和教育目的使用。
+- 北京市即时配送平台订单数据（脱敏）
+- OpenStreetMap 路网数据
