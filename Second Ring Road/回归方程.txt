@@ -1,0 +1,9 @@
+回归方程:
+ln(OD_ij) = 1.8860 + -0.0034*ln(i_count) + -0.0042*ln(j_count + 1) + 0.0021*ln(POP_j) + -0.0454*BORDER + -0.3366*DIS_ij
+
+变量说明:
+ln_i_count = ln(i_count)
+ln_j_count_plus1 = ln(j_count + 1)
+ln_POP_j = ln(POP_j)
+BORDER = BORDER (0/1变量)
+DIS_ij = 距离 (km)
